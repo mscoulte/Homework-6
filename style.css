@@ -1,0 +1,22 @@
+header {
+  background-color: navy;
+  color: white;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+h2 {
+  float: left;
+}
+
+.col-4 {
+  background-color: navy;
+}
+.container {
+  padding-top: 20px;
+}
+
+.col-md-2 col-5 {
+  background-color: blue;
+}
