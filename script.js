@@ -28,7 +28,12 @@ document.getElementById("searchBtn").addEventListener("click", function(event) {
       return result.json();
     })
     .then(function(data) {
+      weatherIcon = document.getElementById("weatherIcon");
+      weatherIcon.src =
+        "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
+
       $("#cityName").text(data.name + " " + date);
+      $("#cityName").append(weatherIcon);
       let tempC = data.main.temp - 273.15;
       let tempF = (tempC * 9) / 5 + 32;
       $("#temp").text("Temperature: " + tempF + " F");
