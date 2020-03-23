@@ -13,8 +13,6 @@ let date =
 
 let cities = ["Ottawa", "Atlanta"];
 
-function renderCity() {}
-
 document.getElementById("searchBtn").addEventListener("click", function(event) {
   let cityName = document.getElementById("citySearch").value;
   let queryURL =
@@ -22,6 +20,8 @@ document.getElementById("searchBtn").addEventListener("click", function(event) {
     cityName +
     "&appid=" +
     APIKey;
+  let latitude;
+  let longitude;
 
   fetch(queryURL)
     .then(function(result) {
@@ -39,7 +39,38 @@ document.getElementById("searchBtn").addEventListener("click", function(event) {
       $("#temp").text("Temperature: " + tempF + " F");
       $("#humidity").text("Humidity: " + data.main.humidity + " %");
       $("#wind").text("Wind: " + data.wind.speed * 2.23694 + " MpH");
+      latitude = data.coord.lat;
+      longitude = data.coord.lon;
 
       console.log(data);
+
+      getUV(latitude, longitude);
     });
 });
+function getUV(latitude, longitude) {
+  let UVqueryURL =
+    "https://api.openweathermap.org/data/2.5/uvi?lat=" +
+    latitude +
+    "&lon=" +
+    longitude +
+    "&appid=" +
+    APIKey;
+  fetch(UVqueryURL)
+    .then(function(result) {
+      return result.json();
+    })
+    .then(function(UVdata) {
+      console.log(UVdata);
+      UVdata.value = $("#uv").text("UV Index: " + UVdata.value);
+
+      if (UVdata.value <= 3) {
+        $("#uv").attr("style", "background-color: green");
+      } else if (3 < UVdata.value <= 5) {
+        $("#uv").attr("style", "background-color: yellow");
+      } else if (5 < UVdata.value <= 7) {
+        $("#uv").attr("style", "background-color: orange");
+      } else {
+        $("#uv").attr("style", "background-color: red");
+      }
+    });
+}
