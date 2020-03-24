@@ -1,5 +1,6 @@
 let searchBtn = document.getElementById("searchBtn");
 let APIKey = "f4362f1bd34a536aafa14fd65dbfec83";
+let cityName = document.getElementById("citySearch").value;
 
 let today = new Date();
 let date =
@@ -47,6 +48,7 @@ document.getElementById("searchBtn").addEventListener("click", function(event) {
 
       getUV(latitude, longitude);
       get5Day();
+      searchHistory();
     });
 });
 function getUV(latitude, longitude) {
@@ -75,6 +77,14 @@ function getUV(latitude, longitude) {
         $("#uv").attr("style", "background-color: red");
       }
     });
+}
+
+function searchHistory() {
+  let cityName = document.getElementById("citySearch").value;
+  let history = $("<button>");
+  history.text(cityName);
+  history.addClass("btn btn-warning");
+  $("#cityList").prepend(history);
 }
 
 function get5Day() {
