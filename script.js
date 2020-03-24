@@ -14,43 +14,47 @@ let date =
 
 let cities = ["Ottawa", "Atlanta"];
 
-document.getElementById("searchBtn").addEventListener("click", function(event) {
-  let cityName = document.getElementById("citySearch").value;
-  let queryURL =
-    "https://api.openweathermap.org/data/2.5/weather?q=" +
-    cityName +
-    "&appid=" +
-    APIKey;
-  let latitude;
-  let longitude;
+document
+  .getElementById("searchBtn")
+  .addEventListener("click", function getWeather() {
+    let cityName = document.getElementById("citySearch").value;
+    let queryURL =
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
+      cityName +
+      "&appid=" +
+      APIKey;
+    let latitude;
+    let longitude;
 
-  fetch(queryURL)
-    .then(function(result) {
-      return result.json();
-    })
-    .then(function(data) {
-      weatherIcon = document.getElementById("weatherIcon");
-      weatherIcon.src =
-        "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
+    fetch(queryURL)
+      .then(function(result) {
+        return result.json();
+      })
+      .then(function(data) {
+        weatherIcon = document.getElementById("weatherIcon");
+        weatherIcon.src =
+          "https://openweathermap.org/img/wn/" +
+          data.weather[0].icon +
+          "@2x.png";
 
-      $("#cityName").text(data.name + " " + date);
-      $("#cityName").append(weatherIcon);
-      let tempC = data.main.temp - 273.15;
-      let tempF = (tempC * 9) / 5 + 32;
-      $("#temp").text("Temperature: " + tempF.toFixed(1) + " F");
-      $("#humidity").text("Humidity: " + data.main.humidity + " %");
-      let windspeed = data.wind.speed * 2.23694;
-      $("#wind").text("Wind: " + windspeed.toFixed(1) + " MpH");
-      latitude = data.coord.lat;
-      longitude = data.coord.lon;
+        $("#cityName").text(data.name + " " + date);
+        $("#cityName").append(weatherIcon);
+        let tempC = data.main.temp - 273.15;
+        let tempF = (tempC * 9) / 5 + 32;
+        $("#temp").text("Temperature: " + tempF.toFixed(1) + " F");
+        $("#humidity").text("Humidity: " + data.main.humidity + " %");
+        let windspeed = data.wind.speed * 2.23694;
+        $("#wind").text("Wind: " + windspeed.toFixed(1) + " MpH");
+        latitude = data.coord.lat;
+        longitude = data.coord.lon;
 
-      console.log(data);
+        console.log(data);
 
-      getUV(latitude, longitude);
-      get5Day();
-      searchHistory();
-    });
-});
+        getUV(latitude, longitude);
+        get5Day();
+        searchHistory();
+      });
+  });
 function getUV(latitude, longitude) {
   let UVqueryURL =
     "https://api.openweathermap.org/data/2.5/uvi?lat=" +
@@ -84,7 +88,44 @@ function searchHistory() {
   let history = $("<button>");
   history.text(cityName);
   history.addClass("btn btn-warning");
+
   $("#cityList").prepend(history);
+}
+function callButtons() {
+  let cityName = document.getElementsByClassName("btn btn-warning").text;
+  let queryURL =
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+    cityName +
+    "&appid=" +
+    APIKey;
+  let latitude;
+  let longitude;
+
+  fetch(queryURL)
+    .then(function(result) {
+      return result.json();
+    })
+    .then(function(data) {
+      weatherIcon = document.getElementById("weatherIcon");
+      weatherIcon.src =
+        "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
+
+      $("#cityName").text(data.name + " " + date);
+      $("#cityName").append(weatherIcon);
+      let tempC = data.main.temp - 273.15;
+      let tempF = (tempC * 9) / 5 + 32;
+      $("#temp").text("Temperature: " + tempF.toFixed(1) + " F");
+      $("#humidity").text("Humidity: " + data.main.humidity + " %");
+      let windspeed = data.wind.speed * 2.23694;
+      $("#wind").text("Wind: " + windspeed.toFixed(1) + " MpH");
+      latitude = data.coord.lat;
+      longitude = data.coord.lon;
+
+      console.log(data);
+
+      getUV(latitude, longitude);
+      get5Day();
+    });
 }
 
 function get5Day() {
@@ -157,3 +198,5 @@ function get5Day() {
         "@2x.png";
     });
 }
+
+$(document).on("click", ".btn btn-warning", callButtons());
